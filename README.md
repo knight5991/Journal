@@ -1,0 +1,3 @@
+截止到今日，完成了userdao、userService、userController、manager、managerService和ManagerController的编写。
+完成了分别根据类别、文章标题、关键词、作者进行文章查阅的前后端数据绑定：利用Ajax请求，在script函数中将得到的jason数据在前端页面中进行了绑定。
+同时根据后端传来的pageInfo类完成了对页面的分页操作，完成了根据查询到的文章数目，动态的展现页面导航栏
