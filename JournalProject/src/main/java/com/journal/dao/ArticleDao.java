@@ -1,9 +1,7 @@
 package com.journal.dao;
 
 import com.journal.pojo.Article;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -103,4 +101,33 @@ public interface ArticleDao {
      */
     @Select("SELECT a.*, u.nickName, c.categoryName FROM article a JOIN user u ON a.userID = u.userID JOIN category c ON a.categoryID = c.categoryID WHERE a.state = 3 ORDER BY updateTime DESC")
     List<Article> findAllArticlesOrderByUpdateTime();
+
+    /**
+     * 根据类别名称获取类别id
+     * @param categoryName
+     * @return
+     */
+
+    @Select("SELECT categoryID FROM category WHERE categoryName = #{categoryName}")
+    int findCategoryIdByName(@Param("categoryName") String categoryName);
+
+    /**
+     * 首次存储文章
+     *
+     * @param article 文章对象
+     * @return
+     */
+    @Insert("INSERT INTO article (userID, title, filepath, categoryID, upLoadTime, updateTime, state, keywords, count) " +
+            "VALUES (#{userID}, #{title}, #{filepath}, #{categoryID}, now(), now(), #{state}, #{keywords}, #{count})")
+    int saveArticle(Article article);
+
+    /**
+     * 更新文章
+     * @param article
+     * @return
+     */
+    @Update("UPDATE article SET title = #{title}, filepath = #{filepath}, categoryID = #{categoryID}, updateTime = now(), state = #{state}, keywords = #{keywords}, count = #{count} WHERE articleID = #{articleID}")
+    int updateArticle(Article article);
+
+
 }

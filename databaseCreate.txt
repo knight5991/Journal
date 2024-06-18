@@ -52,6 +52,7 @@ CREATE TABLE  article(
  FOREIGN KEY (userID) REFERENCES user(userID)  -- 外键约束
 );
 
+
 INSERT INTO userType VALUE(1,'user');
 INSERT INTO userType VALUE(2,'editor');
 INSERT INTO userType VALUE(3,'expert');
@@ -61,31 +62,3 @@ INSERT INTO category VALUE(1,'科幻');
 INSERT INTO category VALUE(2,'童话');
 INSERT INTO category VALUE(3,'武侠');
 INSERT INTO category VALUE(4,'修仙');
-SELECT * FROM article  where state = 3 ORDER BY updateTime DESC
-
-select * from user where phone = #{email} and password = #{password}
-select * from manager
-
-SELECT 
-    a.articleID, 
-    a.userID, 
-    a.title, 
-    a.filepath, 
-    a.categoryID, 
-    a.upLoadTime, 
-    a.updateTime, 
-    a.state, 
-    a.keywords, 
-    a.count,
-    u.nickName,
-    c.categoryName
-FROM 
-    article a
-JOIN 
-    user u ON a.userID = u.userID
-JOIN 
-    category c ON a.categoryID = c.categoryID
-WHERE 
-    u.nickName LIKE CONCAT('%', '1', '%') 
-    AND a.state = 3;
-

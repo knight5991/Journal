@@ -13,5 +13,6 @@ public class PageRequest {
 
     @JsonProperty(defaultValue = "10")
     private int pageSize = 10;
+
     // Getters and setters
 }

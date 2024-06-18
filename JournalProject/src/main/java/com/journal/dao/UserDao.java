@@ -6,6 +6,12 @@ import org.apache.ibatis.annotations.*;
 //对应表user
 @Mapper
 public interface UserDao {
+    @Select("select * from user where phone = #{phone}")
+    public User findUserByPhone(@Param("phone")String phone);
+
+    @Select("select * from user where email = #{email}")
+    public User findUserByEmail(@Param("email")String email);
+
     /**
      * 根据手机与密码查找user（手机号登录）
      * @param Phone

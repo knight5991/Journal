@@ -2,10 +2,7 @@ package com.journal.config;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 @Configuration
 @EnableWebMvc
@@ -23,5 +20,14 @@ public class SpringMvcConfig implements WebMvcConfigurer {
             registry.addResourceHandler("/personalHtml/**")
                     .addResourceLocations("/personalHtml/");
     }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 注册拦截器
+        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/page/submit.html");
+        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/personalHtml/personalHome.html");
+        registry.addInterceptor(new MyInterceptor()).addPathPatterns("/personalHtml/personalSetting.html");
+    }
+
 
 }
