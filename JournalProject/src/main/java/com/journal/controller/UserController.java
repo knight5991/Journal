@@ -118,9 +118,17 @@ public class UserController {
         return new ApiResponse<>(true, "Success", list);
     }
 
+    //按热度查询文章
     @RequestMapping("/findByCount")
     public ApiResponse<PageInfo> findByCount(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
         PageInfo<Article> info = userService.findByCount(pageNum);
         return new ApiResponse<>(true, "Success", info);
+    }
+
+    //查询当期登录用户
+    @RequestMapping("/findCurUser")
+    public ApiResponse<User> findArticle(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        return new ApiResponse<>(true, "Success", user);
     }
 }

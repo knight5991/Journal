@@ -1,0 +1,237 @@
+<!DOCTYPE HTML>
+
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<head>
+  <title>热度排行</title>
+  <meta charset="utf-8" />
+  <!--保证不同设备显示效果-->
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<script>
+  $(document).ready(function() {
+    // 页面加载完成后发送ajax请求,更新期刊
+    findArticles();
+  });
+
+  function findArticles (pageNum) {
+    url = `http://localhost:8080/users/findByCount`
+    if (pageNum != null && pageNum !=""){
+      url+='?pageNum='+pageNum;
+    }
+    axios.get(url)
+            .then((res) => {
+              console.log(res.data);
+              //更新书籍表单
+              var articleList = res.data.data.list;  //获取返回的数据
+              var ss =""
+              for (let i = 0; i < articleList.length; i++) {
+                var article = articleList[i];
+                //根据作者id和类型id查询
+                ss+="<tr> <td>"+article.articleID+
+                        "</td> <td>"+ article.title+"</td> <td>"+
+                        "</td> <td>"+article.categoryName+"</td> <td>"+
+                        "</td> <td>"+article.nickName+"</td> <td>"+
+                        "</td> <td>"+article.upLoadTime+"</td> <td>"+
+                        "</td> <td>"+article.updateTime+"</td> <td>"+
+                        "</td> <td>"+article.count+"</td> <td>"+
+                        "</td> <td><a href='/page/journalShow.html?articleID="+article.articleID+"'>查阅</a></td></tr>";
+              }
+              document.getElementById("table-articles").innerHTML=ss;
+              // 更新导航栏
+              var cur = res.data.data.pageNum;
+              //当前已经是第一页时，禁用pre按钮
+              if (cur == 1){
+                var navigator = "<li><a class='button disabled' onclick='findArticles("+cur+")'>Prev</a></li>"
+              }else {
+                var navigator = "<li><a class='button' onclick='findArticles("+(cur-1)+")'>Prev</a></li>"
+              }
+              for (let i = 1; i <= res.data.data.pages; i++) {
+                if (i == res.data.data.pageNum){
+                  navigator += "<li><a class='page active' onclick='findArticles("+i+")'>"+i+"</a></li>";
+                  continue;
+                }
+                navigator += "<li><a class='page' onclick='findArticles("+i+")'>"+i+"</a></li>";
+              }
+              //当前已经是最后一页时，禁用next按钮
+              if (cur == res.data.data.pages || res.data.data.pages==0){
+                navigator+="<li><a class='button disabled' onclick='findArticles("+cur+1+")'>Next</a></li>";
+              }else {
+                navigator+="<li><a class='button' onclick='findArticles("+(cur+1)+")'>Next</a></li>";
+              }
+              document.getElementById("table_navigator").innerHTML=navigator;
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            });
+  }
+</script>
+
+
+<body class="is-preload">
+<!-- Wrapper -->
+<div id="wrapper">
+  <!-- Main -->
+  <div id="main">
+    <div class="inner">
+
+      <!-- Header -->
+      <header id="header">
+        <a href="index.html" class="logo"><strong>期刊投稿</strong>管理系统</a>
+        <ul class="icons">
+          <li><a href="#" class="icon brands fa-medium-m" data-tooltip="个人主页"><span class="label">Medium</span></a></li>
+        </ul>
+      </header>
+
+      <section>
+
+      <section>
+        <header class="main">
+          <h1>文库热度排行榜</h1>
+        </header>
+      </section>
+
+      <div class="table-wrapper">
+        <table>
+          <thead>
+          <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>类别</th>
+            <th>作者</th>
+            <th>上传时间</th>
+            <th>更新时间</th>
+            <th>热度</th>
+            <th>详情</th>
+          </tr>
+          </thead>
+          <tbody id="table-articles">
+          <!--            <tr>-->
+          <!--              <td>AC001</td>-->
+          <!--              <td>Ante turpis integer aliquet porttitor.</td>-->
+          <!--              <td>NoName</td>-->
+          <!--              <td>Item1</td>-->
+          <!--              <td>2024.12.12</td>-->
+          <!--              <td>2024.12.12</td>-->
+          <!--              <td>1111</td>-->
+          <!--              <td>查阅</td>-->
+          <!--            </tr>-->
+
+          </tbody>
+        </table>
+      </div>
+
+      <div class="page-span">
+        <ul class="pagination" id="table_navigator">
+          <!--          <li><span class="button disabled">Prev</span></li>-->
+          <!--          <li><a href="#" class="page active">1</a></li>-->
+          <!--          <li><a href="#" class="button">Next</a></li>-->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Sidebar -->
+  <div id="sidebar">
+    <div class="inner">
+
+      <!-- Search -->
+      <section id="search" class="alt">
+        <form method="post" action="#">
+          <input type="text" name="query" id="query" placeholder="Search" />
+        </form>
+      </section>
+
+      <nav id="menu">
+        <header class="major">
+          <h2>Menu</h2>
+        </header>
+        <ul>
+          <li><a href="index.html">主页</a></li>
+          <li><a href="submit.html">期刊投稿</a></li>
+          <li><a href="selectJournal.html">期刊查找</a></li>
+          <li>
+            <span class="opener">热门期刊分类</span>
+            <ul>
+              <li><a href="#">Lorem Dolor</a></li>
+              <li><a href="#">Ipsum Adipiscing</a></li>
+              <li><a href="#">Tempus Magna</a></li>
+              <li><a href="#">Feugiat Veroeros</a></li>
+            </ul>
+          </li>
+          <li><a href="RankByhOT.html">文库热度排行榜</a></li>
+          <li>
+            <span class="opener">登录</span>
+            <ul>
+              <li><a href="Login.html">用户登录</a></li>
+              <li><a href="managerLogin.html">管理员帐号登录</a></li>
+            </ul>
+          </li>
+          <li><a href="#contentUs">联系我们</a></li>
+          <li><a href="/users/exitlogin" >退出登录</a></li>
+        </ul>
+      </nav>
+
+
+      <!-- Section -->
+      <section>
+        <header class="major">
+          <h2>Ante interdum</h2>
+        </header>
+        <div class="mini-posts">
+          <article>
+            <a href="#" class="image"><img src="../images/pic07.jpg" alt="" /></a>
+            <p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+          </article>
+          <article>
+            <a href="#" class="image"><img src="../images/pic08.jpg" alt="" /></a>
+            <p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+          </article>
+          <article>
+            <a href="#" class="image"><img src="../images/pic09.jpg" alt="" /></a>
+            <p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore aliquam.</p>
+          </article>
+        </div>
+        <ul class="actions">
+          <li><a href="#" class="button">More</a></li>
+        </ul>
+      </section>
+
+      <!-- Section -->
+      <section>
+        <header class="major">
+          <h2>联系我们</h2>
+        </header>
+        <p>Sed varius enim lorem ullamcorper dolore aliquam aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin sed aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>
+        <ul class="contact">
+          <li class="icon solid fa-envelope"><a href="#">unKnown@untitled.tld</a></li>
+          <li class="icon solid fa-phone">(000) 000-0000</li>
+          <li class="icon solid fa-home">广东省湛江市麻章区海大路1号<br/>
+            期刊投稿管理系统</li>
+        </ul>
+      </section>
+
+      <!-- Footer -->
+      <footer id="footer">
+        <p class="copyright">版权及最终解释权所有&copy;本站制作组</p>
+      </footer>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Scripts -->
+<script src="../assets/js/jquery.min.js"></script>
+<script src="../assets/js/browser.min.js"></script>
+<script src="../assets/js/breakpoints.min.js"></script>
+<script src="../assets/js/util.js"></script>
+<script src="../assets/js/main.js"></script>
+
+</body>
+</html>

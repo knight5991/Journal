@@ -9,6 +9,30 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <script>
+    //动态获取用户名
+    $(document).ready(function() {
+        // 页面加载完成后发送ajax请求
+        $.ajax({
+            type: "GET",
+            url: "/users/findCurUser",
+            success: function(response) {
+                if (response.success) {
+                    var userObject = response.data; // 用户信息对象
+                    var nicknameElement = document.getElementById('username'); // 获取元素
+                    if (nicknameElement) {
+                        nicknameElement.textContent = "欢迎用户 " + userObject.nickName; // 更新元素内容
+                    }
+                } else {
+                    console("Failed to load user information: " + response.message);
+                }
+            },
+            error: function(error) {
+                console("Error: " + error.statusText);
+            }
+        });
+    });
+
+
     $(document).ready(function() {
         // 页面加载完成后发送ajax请求
         $.ajax({
@@ -80,17 +104,10 @@
                     <h2>我的投稿</h2>
                 </header>
                 <div class="posts" ID="posts">
-                    <article>
-                        <h3>{$作品名}</h3>
-                        <p>{$关键字}</p>
-                        <p>作品状态</p>
-                        <ul class="actions">
-                            <li><a href="#" class="button">More</a></li>
-                        </ul>
-                    </article>
 <!--                    <article>-->
-<!--                        <h3>Nulla amet dolore</h3>-->
-<!--                        <p>Aenean ornare velit lacus, ac varius enim lorem ullamcorper dolore. Proin aliquam facilisis ante interdum. Sed nulla amet lorem feugiat tempus aliquam.</p>-->
+<!--                        <h3>{$作品名}</h3>-->
+<!--                        <p>{$关键字}</p>-->
+<!--                        <p>作品状态</p>-->
 <!--                        <ul class="actions">-->
 <!--                            <li><a href="#" class="button">More</a></li>-->
 <!--                        </ul>-->
@@ -112,7 +129,7 @@
                     <h2>个人主页</h2>
                 </header>
                 <ul>
-                    <li>欢迎用户xxx</li>
+                    <li id="username">欢迎用户xxx</li>
                     <br>
                     <li><a href="personalHome.html">我的投稿</a></li>
                     <li><a href="../page/submit.html">期刊投稿</a></li>
