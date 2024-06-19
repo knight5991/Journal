@@ -19,7 +19,8 @@ CREATE TABLE user (
   email VARCHAR(50) UNIQUE,
   phone VARCHAR(50) UNIQUE,
   creatDate TIMESTAMP,      -- 创建时间
-  typeID int,
+  typeID INT,               -- 1：普通用户   2.编辑    3.专家
+	categoryId int,
   FOREIGN KEY (typeID) REFERENCES userType(typeID)  -- 外键约束
 );
 
@@ -38,14 +39,14 @@ CREATE TABLE  category(
 
 -- 稿件表
 CREATE TABLE  article(
-   articleID int PRIMARY KEY,
+   articleID int PRIMARY KEY AUTO_INCREMENT,
   userID int,
   title VARCHAR(30) NOT NULL,
   filepath VARCHAR(255) UNIQUE,   -- 内容（存放稿件地址）
   categoryID int,
  upLoadTime VARCHAR(30),
  updateTime VARCHAR(30),
- state INT,   -- 稿件状态 0:未审核 1:专家审核阶段 2:退回 3:通过
+ state INT,   -- 稿件状态  1:专家审核阶段 2:退回 3:通过
  keywords VARCHAR(30), 
  count int,  -- 点击次数
  FOREIGN KEY (categoryID) REFERENCES category(categoryID),  -- 外键约束

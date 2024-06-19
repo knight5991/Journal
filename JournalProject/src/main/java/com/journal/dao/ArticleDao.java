@@ -1,6 +1,7 @@
 package com.journal.dao;
 
 import com.journal.pojo.Article;
+import com.journal.pojo.Category;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -92,7 +93,7 @@ public interface ArticleDao {
      * @param articleId 文章ID
      * @return 对应ID的文章对象
      */
-    @Select("SELECT a.*, u.nickName, c.categoryName FROM article a JOIN user u ON a.userID = u.userID JOIN category c ON a.categoryID = c.categoryID WHERE a.articleId = #{articleId} AND a.state = 3")
+    @Select("SELECT a.*, u.nickName, c.categoryName FROM article a JOIN user u ON a.userID = u.userID JOIN category c ON a.categoryID = c.categoryID WHERE a.articleId = #{articleId}")
     Article findArticleById(@Param("articleId") int articleId);
 
     /**
@@ -129,5 +130,29 @@ public interface ArticleDao {
     @Update("UPDATE article SET title = #{title}, filepath = #{filepath}, categoryID = #{categoryID}, updateTime = now(), state = #{state}, keywords = #{keywords}, count = #{count} WHERE articleID = #{articleID}")
     int updateArticle(Article article);
 
+    /**
+     *
+     * @param articleID
+     * @param state
+     * @return
+     */
+    @Update("UPDATE article SET state = #{state}, updateTime = now() WHERE articleID = #{articleID}")
+    int updateArticleState(@Param("articleID") int articleID, @Param("state") int state);
 
+    /**
+     * 查询所有类别
+     * @return
+     */
+    @Select("SELECT * FROM category")
+    List<Category> findAllCategory();
+
+    /**
+     * 根据审稿人专业领域，查询所有未审核的文章
+     * @return
+     */
+    @Select("SELECT a.*, u.nickName, c.categoryName FROM article a " +
+            "JOIN user u ON a.userID = u.userID " +
+            "JOIN category c ON a.categoryID = c.categoryID " +
+            "WHERE a.state = 1 AND a.categoryid = #{categoryId}")
+    List<Article> findState1(int categoryId);
 }

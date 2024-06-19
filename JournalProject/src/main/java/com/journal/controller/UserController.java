@@ -2,6 +2,7 @@ package com.journal.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.journal.pojo.Article;
+import com.journal.pojo.Category;
 import com.journal.pojo.basicClass.User;
 import com.journal.service.UserService;
 import com.journal.utils.ApiResponse;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -73,6 +75,7 @@ public class UserController {
         response.sendRedirect("/page/index.html");
     }
 
+    //根据关键词对文章进行模糊搜索
     @RequestMapping("/findArticle")
     public ApiResponse<PageInfo> findArticle(@RequestParam("key") String key,
                                              @RequestParam("searchWord") String searchWord,
@@ -98,5 +101,12 @@ public class UserController {
         }
 
         return new ApiResponse<>(true, "Success", pageInfo);
+    }
+
+    //获取所有类别
+    @RequestMapping("/findAllCategory")
+    public ApiResponse<List<Category>> findArticle() {
+        List<Category> list = userService.findAllCategory();
+        return new ApiResponse<>(true, "Success", list);
     }
 }
