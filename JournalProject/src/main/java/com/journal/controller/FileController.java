@@ -107,7 +107,7 @@ public class FileController {
     }
 
 
-    //内容传输api(download?articleID=)
+    //阅读文章内容api
     @RequestMapping("/show")
     public ApiResponse<Article> getFileContent(@RequestParam("articleID") int articleID) {
         // 根据文章ID从数据库中获取文件路径
@@ -117,11 +117,15 @@ public class FileController {
         Path filePath = Paths.get(uploadDir+filePath1);
         // 读取文件内容
         String fileContent;
+
         try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
             HWPFDocument document = new HWPFDocument(fis);
             WordExtractor extractor = new WordExtractor(document);
             fileContent = extractor.getText();
             article.setText(fileContent);
+            //将文章点击次数+1,实现实现统计文章点击次数
+            article.setCount(article.getCount()+1);
+            userService.updateArticleCount(article);
         } catch (IOException e) {
             e.printStackTrace();
             // 如果读取文件失败，则返回错误响应

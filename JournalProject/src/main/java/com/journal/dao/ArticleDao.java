@@ -131,7 +131,16 @@ public interface ArticleDao {
     int updateArticle(Article article);
 
     /**
-     *
+     * 更新文章count属性（使count+1）
+     * @param article
+     * @return
+     */
+    @Update("UPDATE article SET count = #{count} WHERE articleID = #{articleID}")
+    int updateArticleCount(Article article);
+
+
+    /**
+     *更新文章状态
      * @param articleID
      * @param state
      * @return
@@ -155,4 +164,31 @@ public interface ArticleDao {
             "JOIN category c ON a.categoryID = c.categoryID " +
             "WHERE a.state = 1 AND a.categoryid = #{categoryId}")
     List<Article> findState1(int categoryId);
+
+
+    /**
+     * 根据用户ID查询文章
+     * @param userId 用户ID
+     * @return 符合条件的文章列表
+     */
+    @Select({
+            "SELECT a.*, u.nickName, c.categoryName",
+            "FROM article a",
+            "JOIN user u ON a.userID = u.userID",
+            "JOIN category c ON a.categoryID = c.categoryID",
+            "WHERE a.userID = #{userId}"
+    })
+    List<Article> findByUserId(@Param("userId") int userId);
+
+    /**
+     * 按count（点击次数）大小排序查询文章
+     * @return
+     */
+    @Select("SELECT a.*, u.nickName, c.categoryName " +
+            "FROM article a " +
+            "JOIN user u ON a.userID = u.userID " +
+            "JOIN category c ON a.categoryID = c.categoryID " +
+            "WHERE a.state = 3 " +
+            "ORDER BY a.count DESC")
+    List<Article> findByCount();
 }

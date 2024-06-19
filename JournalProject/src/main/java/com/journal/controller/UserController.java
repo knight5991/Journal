@@ -109,4 +109,18 @@ public class UserController {
         List<Category> list = userService.findAllCategory();
         return new ApiResponse<>(true, "Success", list);
     }
+
+    //通过用户id获取稿件(查询稿件状态api接口)
+    @RequestMapping("/findByUserid")
+    public ApiResponse<List<Article>> findByUserid(HttpServletRequest request) {
+        User user = (User) request.getSession().getAttribute("user");
+        List<Article> list = userService.findByUserId(user.getUserID());
+        return new ApiResponse<>(true, "Success", list);
+    }
+
+    @RequestMapping("/findByCount")
+    public ApiResponse<PageInfo> findByCount(@RequestParam(value = "pageNum", defaultValue = "1") int pageNum) {
+        PageInfo<Article> info = userService.findByCount(pageNum);
+        return new ApiResponse<>(true, "Success", info);
+    }
 }
