@@ -131,4 +131,23 @@ public class UserController {
         User user = (User) request.getSession().getAttribute("user");
         return new ApiResponse<>(true, "Success", user);
     }
+
+    // 新建用户
+    @RequestMapping("/insertUser")
+    public ApiResponse<Integer> insertUser(@RequestBody User user) {
+        try {
+            int result = userService.insertUser(user);
+            if (result > 0) {
+                return new ApiResponse<>(true, "注册成功！", result);
+            } else {
+                return new ApiResponse<>(false, "注册失败，请联系管理员", result);
+            }
+        } catch (Exception e) {
+            // 在发生异常时返回一个带有错误消息的ApiResponse对象
+            return new ApiResponse<>(false, "注册失败，请联系管理员", null);
+        }
+    }
+
 }
+
+
