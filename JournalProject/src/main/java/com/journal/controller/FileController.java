@@ -88,7 +88,9 @@ public class FileController {
             String fileName = article.getTitle()+".doc";
 
             // 设置响应头
+            //创建 HttpHeaders 对象，并设置内容类型为二进制流（APPLICATION_OCTET_STREAM）。
             HttpHeaders headers = new HttpHeaders();
+            //设置 Content-Disposition 响应头，指定文件作为附件下载，并设置下载的文件名。
             headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
             headers.setContentDispositionFormData("attachment", fileName);
 
@@ -119,7 +121,9 @@ public class FileController {
         String fileContent;
 
         try (FileInputStream fis = new FileInputStream(filePath.toFile())) {
+            //HWPFDocument 是 Apache POI 库中的一个类，用于表示一个 Word 97-2003 文档（即 .doc 文件）。
             HWPFDocument document = new HWPFDocument(fis);
+            //WordExtractor 是 Apache POI 库中的另一个类，用于从 HWPFDocument 实例中提取文本内容。
             WordExtractor extractor = new WordExtractor(document);
             fileContent = extractor.getText();
             article.setText(fileContent);
